@@ -1,6 +1,7 @@
 import sys
 import os
 import gnupg
+import time
 if(len(sys.argv)<4):
 	print "not enough arguments"
         print "must have <source> <encrypted> <remote> directories"
@@ -27,12 +28,14 @@ for root, dirs, files in os.walk(source, topdown=True):
         if(not os.path.exists(newpath)):
             os.makedirs(newpath)
             print 'built path'
-        with open(file_path, 'rb') as f:
-                message = str(gpg.encrypt(f.read(),fingerprint,output=encrypted_path+'.gpg'))
+        statinfo = os.stat(file_path)
+        if statinfo.st_size<100000000:
+                with open(file_path, 'rb') as f:
+                        message = str(gpg.encrypt(f.read(),fingerprint,output=encrypted_path+'.gpg'))
         print 'file done'
         
 print 'All Done!'
-command = "rsync -rltzuv "+encrypted+"/ "+remote
+command = "cp -r "+encrypted+"/ "+remote
 print "command "+command
 result = ""
 resulterror = ""
