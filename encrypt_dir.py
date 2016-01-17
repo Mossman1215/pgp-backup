@@ -9,8 +9,8 @@ if(len(sys.argv)<4):
 source = os.path.normpath(sys.argv[1])
 encrypted = os.path.normpath(sys.argv[2])
 remote = os.path.normpath(sys.argv[3])
-gpg = gnupg.GPG(homedir='/home/gdrive/gpghome')
-fingerprint = '42D9D173E4C7BE98463256CDF290A760E3C38ABC'
+gpg = gnupg.GPG()
+fingerprint = '0402C9ADB9626A45700A39F0663890816CDA1490'
 
 for root, dirs, files in os.walk(source, topdown=True):           
     for name in dirs:
@@ -31,7 +31,7 @@ for root, dirs, files in os.walk(source, topdown=True):
         statinfo = os.stat(file_path)
         if statinfo.st_size<100000000:
                 with open(file_path, 'rb') as f:
-                        message = str(gpg.encrypt(f.read(),fingerprint,output=encrypted_path+'.gpg'))
+                        message = str(gpg.encrypt(f.read(),fingerprint,output=encrypted_path))
         print 'file done'
         
 print 'All Done!'
@@ -39,5 +39,5 @@ command = "cp -r "+encrypted+"/ "+remote
 print "command "+command
 result = ""
 resulterror = ""
-print subprocess.call(command,stdout=result,stderr=resulterror)
+#print subprocess.call(command,stdout=result,stderr=resulterror)
 print 'synched'
