@@ -47,7 +47,8 @@ class encryptedUploader:
                 file_path = os.path.join(root, name)
                 subdir = os.path.relpath(root,self.source)
                 newpath = os.path.join(self.encrypted,subdir)
-                encrypted_path = os.path.join(newpath,name)                
+                encrypted_path = os.path.join(newpath,name)
+                encrypted_path += '.gpg'
                 statinfo = os.stat(file_path)
                 remote_path = os.path.join(remote,subdir)
                 remote_path = os.path.join(remote_path,name)
@@ -56,8 +57,8 @@ class encryptedUploader:
                     with open(file_path, 'rb') as f:
                         if(not name+".gpg" in files_remote):
                             print "file not in remote "+remote_path+".gpg"
-                        messsage = str(gpg.encrypt(f.read(),fingerprint,output=encrypted_path+".gpg"))
-                        self.upload_file(encrypted_path+'.gpg',parent_folder_id[0])
+                        messsage = str(gpg.encrypt(f.read(),fingerprint,output=encrypted_path))
+                        self.upload_file(encrypted_path+,parent_folder_id[0])
             if(len(parent_folder_id)>0):
                 parent_folder_id.pop();
     def _create_drive(self):
@@ -116,16 +117,16 @@ class encryptedUploader:
         file = self.drive_service.files().insert(body=file_metadata,fields='id').execute()
         return file.get('id')
 
-    def upload_file(self, file_path,parent='root'):
-        folder_id = self._get_folder_id(parent)
+    def upload_file(self, file_path,parent):
+        #folder_id = self._get_folder_id(parent)
         
         media = MediaFileUpload(file_path, mimetype='video/avi')
-        response = self.drive_service.files().insert(media_body=media, body={'title':os.path.basename(file_path), 'parents':[{u'id': folder_id,"kind": "drive#fileLink"}]}).execute()
+        response = self.drive_service.files().insert(media_body=media, body={'title':os.path.basename(file_path), 'parents':[{u'id': parent}]}).execute()
         #print response
         video_link = response['alternateLink']
         
-        if self.delete_after_upload:
-            os.remove(file_path)    
+        #if self.delete_after_upload:
+            #os.remove(file_path)    
 
 if __name__ == "__main__":
     if len(sys.argv)<4:
