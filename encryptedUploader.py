@@ -57,6 +57,9 @@ class encryptedUploader:
                 if not root.endswith('.'):
                     current_id = self.make_folder(root,parent_folder_id[0])
                     parent_folder_id.insert(0,current_id)
+            if(len(files)<1):
+                print 'no files to upload'
+                break;
             for name in files:
                 file_path = os.path.join(root, name)
                 subdir = os.path.relpath(root,self.source)
