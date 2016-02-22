@@ -24,12 +24,37 @@ class encryptedUploader:
 
 #need to create new drive folders of mime type google.folder thing
 #parenting correctly with their ID number
-    def _encryptDir(self,source,remote):
+    def encryptDir(self,source,remote):
         gpg = gnupg.GPG()
         key_data = open('backup_pub.gpg').read()
         import_result = gpg.import_keys(key_data)
         #always import keys so that it is in memory/keyring
         fingerprint = '0402C9ADB9626A45700A39F0663890816CDA1490'
+        for root, dirs, files in os.walk(source, topdown=True):           
+            print root
+            subdir = os.path.relpath(root,self.source)
+            if not root.endswith('.'):
+                current_id = self.make_folder(root,parent_folder_id[0])
+                parent_folder_id.insert(0,current_id)
+            for name in files:
+                file_path = os.path.join(root, name)
+                subdir = os.path.relpath(root,self.source)
+                if(subdir.find('./')!=-1):
+                    subdir = subdir[2:]
+                newpath = os.path.join(self.encrypted,subdir)
+                encrypted_path = os.path.join(newpath,name)
+                encrypted_path += '.gpg'
+                statinfo = os.stat(file_path)
+                        
+                if statinfo.st_size<100000000 and name != '.':
+                    with open(file_path, 'rb') as f:
+                        if(not os.path.exists(newpath)):
+                            os.makedirs(newpath)#make the folder in /tmp if it does not exist
+                        messsage = str(gpg.encrypt(f.read(),fingerprint,output=encrypted_path))
+                        self.upload_file(encrypted_path,parent_folder_id[0])
+            #pop parent folder?
+    def upload_dir(self,source,remote):
+        #enclose in for loop
         parent_folder_id =[]
         parent_folder_id.insert(0,self._get_folder_id(remote))
         folder_response = self.drive_service.files().list(q="mimeType contains 'application/vnd.google-apps.folder' and trashed=false").execute()
@@ -45,43 +70,12 @@ class encryptedUploader:
         else:
             files_remote = []
         print "folders " + str(folders) + " files " + str(files_remote)
-        if self.debug == True:
-            exit()
-        for root, dirs, files in os.walk(source, topdown=True):           
-            print root
-            subdir = os.path.relpath(root,self.source)
-            remote_path = os.path.join(remote,subdir)
-            print remote_path
-            if not subdir in folders:
-                print 'folder is not in remote'
-                if not root.endswith('.'):
-                    current_id = self.make_folder(root,parent_folder_id[0])
-                    parent_folder_id.insert(0,current_id)
-            if(len(files)<1):
-                print 'no files to upload'
-                break;
-            for name in files:
-                file_path = os.path.join(root, name)
-                subdir = os.path.relpath(root,self.source)
-                if(subdir.find('./')!=-1):
-                    subdir = subdir[2:]
-                newpath = os.path.join(self.encrypted,subdir)
-                encrypted_path = os.path.join(newpath,name)
-                encrypted_path += '.gpg'
-                statinfo = os.stat(file_path)
-                remote_path = os.path.join(remote,subdir)
-                remote_path = os.path.join(remote_path,name)
-                        
-                if statinfo.st_size<100000000 and name != '.':
-                    with open(file_path, 'rb') as f:
-                        if(not name+".gpg" in files_remote):
-                            print "file not in remote "+remote_path+".gpg"
-                        if(not os.path.exists(newpath)):
-                            os.makedirs(newpath)#make the folder in /tmp if it does not exist
-                        messsage = str(gpg.encrypt(f.read(),fingerprint,output=encrypted_path))
-                        self.upload_file(encrypted_path,parent_folder_id[0])
-            if(len(parent_folder_id)>0):
+        print remote_path
+          if not subdir in folders:#this needs to be a query looking for folders with title == basename(subdir) and returns id to the stack 
+             print 'folder is not in remote'
+        if(len(parent_folder_id)>0):
                 parent_folder_id.pop();
+    
     def _create_drive(self):
         """Create a Drive service."""
         auth_required = True
