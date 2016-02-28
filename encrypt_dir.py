@@ -28,6 +28,7 @@ for root, dirs, files in os.walk(source, topdown=True):
         if statinfo.st_size<100000000:
                 with open(file_path, 'rb') as f:
                         message = str(gpg.encrypt(f.read(),fingerprint,output=encrypted_path+'.gpg'))
+                f.close()
         print 'file done'
         
 print 'All Done!'
