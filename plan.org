@@ -1,0 +1,7 @@
+* features
+* Tests
+** upload test
+   top down traversal of directory
+   upload all folders in root first
+   then upload files
+   then process folders *looping*

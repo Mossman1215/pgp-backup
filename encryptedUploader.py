@@ -51,31 +51,27 @@ class encryptedUploader:
                         if(not os.path.exists(newpath)):
                             os.makedirs(newpath)#make the folder in /tmp if it does not exist
                         messsage = str(gpg.encrypt(f.read(),fingerprint,output=encrypted_path))
-                        self.upload_file(encrypted_path,parent_folder_id[0])
+                        #self.upload_file(encrypted_path,parent_folder_id[0])
             #pop parent folder?
     def upload_dir(self,source,remote):
-        #enclose in for loop
         parent_folder_id =[]
-        parent_folder_id.insert(0,self._get_folder_id(remote))
-        folder_response = self.drive_service.files().list(q="mimeType contains 'application/vnd.google-apps.folder' and trashed=false").execute()
-        folders = folder_response['items']
-        if len(folders) > 0:
-            folders = folders[0]['title']
-        else:
-            folders = []
-        files_response = self.drive_service.files().list(q="mimeType contains 'video/avi' and trashed=false").execute() 
-        files_remote = files_response['items']
-        if len(files_remote) > 0:
-            files_remote = files_remote[0]['title']
-        else:
-            files_remote = []
-        print "folders " + str(folders) + " files " + str(files_remote)
-        print remote_path
-          if not subdir in folders:#this needs to be a query looking for folders with title == basename(subdir) and returns id to the stack 
-             print 'folder is not in remote'
-        if(len(parent_folder_id)>0):
-                parent_folder_id.pop();
-    
+        parent_folder_id.insert(0,self._get_folder_id(remote)
+        for root,subdirs,files in os.walk(source, topdown=true)
+            query = self._get_folder_id(root)
+            if query['title'] == os.path.basename(root):#root exists in remote
+                update_folder(root,files)
+            else:
+                parent_folder_id.insert(0,self.upload_new(root,files))
+
+    def update_folder(self,root,files,pid):
+        #check for folder
+        return 0
+    def upload_new(self,root,files,pid):
+        fid = make_folder(os.path.basename(root),pid)
+        for items in files
+            upload_file(os.path.basename(item),fid)
+        return fid
+        
     def _create_drive(self):
         """Create a Drive service."""
         auth_required = True
