@@ -5,3 +5,6 @@
    upload all folders in root first
    then upload files
    then process folders *looping*
+** instruction test
+   build a set of json strings to represent the required opertations to mirror the file and folder structures in google drive
+
