@@ -7,14 +7,14 @@ class uploadTest:
                 print('running')
 #CHANGE THE NAMING SCHEME TO MAKE IT MORE CLEAR WHAT IS THE PARENT FOLDER AND WHAT IS THE ID OF THE OBJECT
 #CHECK IT ACTUALLY GETS NESTING FOLDERS CORRECTLY FOLDER ID"S NEED TO BE READ FROM FILE ONCE TOP LEVEL IS MADE
-        def getParentID(filename,self):
+        def getParentID(self,filename):
                 #search the file for an existing number
                 f2 = open('operations.txt','r')
                 for line in f2:
                         line_arr = line.split(',')
                         if(filename == line_arr[0]):
                                 f2.close()
-                                return int(line_arr[2])
+                                return int(line_arr[1])
                 f2.close()
                 return -1
         def getNewID(self):
