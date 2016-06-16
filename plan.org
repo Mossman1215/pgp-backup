@@ -1,10 +1,29 @@
 * features
+** assess folder and precalculate number of operations 
+   Make sure that it fits within google requirements
+** wait for some small time per file
+   to keep within google limits
 * Tests
-** upload test
+** DONE upload test
    top down traversal of directory
    upload all folders in root first
    then upload files
    then process folders *looping*
 ** instruction test
    build a set of json strings to represent the required opertations to mirror the file and folder structures in google drive
-
+** instruction test 2
+   modify instructions to handle parent ID's
+   have a parentID as well as rootID
+   root folder gets previous parentID all folders underneath get rootID
+   once all folders in a level have been processed the parent id changes
+   make a parent to subdirectory Mapping to keep track
+   name,myID,parentID
+* Hard Limits
+  1000 requests per 100 seconds
+  1,000,000,000 per day
+* Tasks
+** TODO copy structure of upload_dir_inst and merge it into upload_dir
+** DONE Note hard limits
+** DONE Calculate size of walk
+** TODO email results
+   
