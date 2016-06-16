@@ -26,4 +26,13 @@
 ** DONE Note hard limits
 ** DONE Calculate size of walk
 ** TODO email results
+** TODO rebuild instructions script
+   must do a memory search to get parent ID's
+   
+   mapping of directories -> parentIDs
+   check if root is in mapping if not it is root of all directories and set a new pID variable
+   or retreive pID from memory
+   all subdirs must be put in the mapping as name -> pID
+   upload the files with parentID = pID
+   
    
