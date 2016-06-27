@@ -9,24 +9,27 @@
    upload all folders in root first
    then upload files
    then process folders *looping*
-** instruction test
+** DONE instruction test
    build a set of json strings to represent the required opertations to mirror the file and folder structures in google drive
-** instruction test 2
+** DONE instruction test 2
    modify instructions to handle parent ID's
    have a parentID as well as rootID
    root folder gets previous parentID all folders underneath get rootID
    once all folders in a level have been processed the parent id changes
    make a parent to subdirectory Mapping to keep track
    name,myID,parentID
+** DONE config file test
+   print config file to terminal
+** TODO email test
 * Hard Limits
   1000 requests per 100 seconds
   1,000,000,000 per day
 * Tasks
-** TODO copy structure of upload_dir_inst and merge it into upload_dir
+** DONE copy structure of upload_dir_inst and merge it into upload_dir
 ** DONE Note hard limits
 ** DONE Calculate size of walk
-** TODO email results
-** TODO rebuild instructions script
+** TODO email results ?
+** DONE rebuild instructions script
    must do a memory search to get parent ID's
    
    mapping of directories -> parentIDs
@@ -35,4 +38,19 @@
    all subdirs must be put in the mapping as name -> pID
    upload the files with parentID = pID
    
-   
+** TODO include encryption as a module
+** TODO modularise existing scripts
+** DONE config file
+   each config file (ini) has 2 structures
+       section = key -> option(s)
+       option = key -> value
+   use ConfigParser.SafeConfigParser()
+*** folders
+    temp
+    oauth
+*** gpg
+    fingerprint
+*** email settings
+    address
+    password
+** TODO figure out the file to integrate the components into
