@@ -38,7 +38,8 @@
    all subdirs must be put in the mapping as name -> pID
    upload the files with parentID = pID
    
-** TODO include encryption as a module
+** DONE include encryption as a module
+** TODO add temporary encryption to ecnrypted_uploader
 ** TODO modularise existing scripts
 ** DONE config file
    each config file (ini) has 2 structures

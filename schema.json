@@ -1,4 +1,0 @@
-"node":{
-     "properties": ["name","id","folder or file"]
-     "children" : ["a list of filenames to process"]
-}
