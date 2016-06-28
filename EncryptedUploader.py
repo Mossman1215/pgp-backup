@@ -1,4 +1,4 @@
-import os,sys,gnupg,time
+import os,sys,gnupg,time,ConfigParser
 from datetime import datetime
 import httplib2
 from apiclient import discovery
@@ -10,12 +10,14 @@ import logging
 
 class EncryptedUploader:
     def __init__(self):
-       self.source = os.path.normpath(sys.argv[1])
-       self.remote = os.path.normpath(sys.argv[2])
-       self.oauth_folder = os.path.normpath(sys.argv[3])
-       self._create_drive()
-       self.mapping = dict()
-       self.encrypter = encrypt()
+        config = ConfigParser.SafeConfigParser()
+        config.read('options.conf')
+        self.source = os.path.normpath(sys.argv[1])
+        self.remote = os.path.normpath(sys.argv[2])
+        self.oauth_folder = config.get('folder','oauth',1)
+        self._create_drive()
+        self.mapping = dict()#names of directories to parent folder id
+        self.encrypter = encrypt()
     def run(self):
         self.upload_dir()
     
