@@ -14,7 +14,8 @@ class EncryptedUploader:
         config.read('options.conf')
         self.source = os.path.normpath(sys.argv[1])
         self.remote = os.path.normpath(sys.argv[2])
-        self.oauth_folder = config.get('folder','oauth',1)
+        self.oauth_folder = os.path.normpath(config.get('folder','oauth',1))
+        #self.log_file = open(str(os.path.join(os.path.normpath(config.get('folder','log',1)),'EncryptedUploader.log')),'w')
         self._create_drive()
         self.mapping = dict()#names of directories to parent folder id
         self.encrypter = encrypt()
@@ -122,8 +123,8 @@ class EncryptedUploader:
             #os.remove(file_path)    
 
 if __name__ == "__main__":
-    if len(sys.argv)<4:
-        print "more arguments required. Must include: source directory,remote (Google Drive) directory, and oauth storage directory"
+    if len(sys.argv)!=3:
+        print "arguments incorrect must include: source directory,remote (Google Drive) directory"
         exit()
-    uploader = encryptedUploader()
+    uploader = EncryptedUploader()
     uploader.run()
