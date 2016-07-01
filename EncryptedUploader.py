@@ -45,7 +45,7 @@ class EncryptedUploader:
                 file_path = os.path.join(root,fi)
                 print(file_path)
                 #encrypt
-                temporary_name = encrypter.encrypt(file_path)
+                temporary_name = self.encrypter.encrypt(file_path)
                 self.upload_file(temporary_name,identifier)
                 os.remove(temporary_name)
     

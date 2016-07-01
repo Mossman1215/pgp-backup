@@ -32,9 +32,3 @@ for root, dirs, files in os.walk(source, topdown=True):
         print 'file done'
         
 print 'All Done!'
-command = "rsync -rltzuv "+encrypted+"/ "+remote
-print "command "+command
-result = ""
-resulterror = ""
-print subprocess.call(command,stdout=result,stderr=resulterror)
-print 'synched'

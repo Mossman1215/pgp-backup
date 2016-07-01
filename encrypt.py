@@ -3,7 +3,7 @@ import os, gnupg, time, ConfigParser
 class encrypt:
         def __init__(self):
                 self.gpg = gnupg.GPG()
-                self.key_data = open('backup_pub.gpg').read()
+                self.key_data = open('backup_key.asc').read()
                 self.import_result = self.gpg.import_keys(self.key_data)
                 print(self.import_result.results)
                 config = ConfigParser.SafeConfigParser()
