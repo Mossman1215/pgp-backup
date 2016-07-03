@@ -47,6 +47,7 @@ class EncryptedUploader:
                 #encrypt
                 temporary_name = self.encrypter.encrypt(file_path)
                 self.upload_file(temporary_name,identifier)
+                time.sleep(1)
                 os.remove(temporary_name)
     
     def number_of_operations(self):

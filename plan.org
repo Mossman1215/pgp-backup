@@ -39,8 +39,8 @@
    upload the files with parentID = pID
    
 ** DONE include encryption as a module
-** TODO add temporary encryption to ecnrypted_uploader
-** TODO modularise existing scripts
+** DONE add temporary encryption to ecnrypted_uploader
+** DONE modularise existing scripts
 ** DONE config file
    each config file (ini) has 2 structures
        section = key -> option(s)
@@ -54,4 +54,5 @@
 *** email settings
     address
     password
-** TODO figure out the file to integrate the components into
+** DONE figure out the file to integrate the components into
+** TODO logging and waiting
