@@ -11,7 +11,7 @@ import logging
 class EncryptedUploader:
     def __init__(self):
         config = ConfigParser.SafeConfigParser()
-        config.read('options.conf')
+        config.read(os.path.normpath(sys.argv[3]))
         self.source = os.path.normpath(sys.argv[1])
         self.remote = os.path.normpath(sys.argv[2])
         self.oauth_folder = os.path.normpath(config.get('folder','oauth',1))
@@ -124,8 +124,8 @@ class EncryptedUploader:
             #os.remove(file_path)    
 
 if __name__ == "__main__":
-    if len(sys.argv)!=3:
-        print "arguments incorrect must include: source directory,remote (Google Drive) directory"
+    if len(sys.argv)!=4:
+        print "arguments given were incorrect they must include: source directory,remote (Google Drive) directory, and configuration location"
         exit()
     uploader = EncryptedUploader()
     uploader.run()
