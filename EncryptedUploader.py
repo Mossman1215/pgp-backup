@@ -46,7 +46,10 @@ class EncryptedUploader:
                 print(file_path)
                 #encrypt
                 temporary_name = self.encrypter.encrypt(file_path)
-                self.upload_file(temporary_name,identifier)
+                try:
+                    self.upload_file(temporary_name,identifier)
+                except IOError:
+                    print("file io error",arg)
                 time.sleep(1)
                 os.remove(temporary_name)
     
