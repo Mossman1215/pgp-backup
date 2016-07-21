@@ -6,6 +6,7 @@ from oauth2client import client
 from oauth2client.file import Storage
 from googleapiclient.http import MediaFileUpload
 from encrypt import encrypt
+from types import *
 import logging
 
 class EncryptedUploader:
@@ -47,9 +48,11 @@ class EncryptedUploader:
                 #encrypt
                 temporary_name = self.encrypter.encrypt(file_path)
                 try:
-                    self.upload_file(temporary_name,identifier)
+                    result = self.upload_file(temporary_name,identifier)
+                    if(type(result) is StringType): #will print error if upload fails
+                        print(result)
                 except TypeError as arg:
-                    print("file type error: " + str(arg))
+                    print("file type error (none): " + str(arg))
                 time.sleep(1)
                 os.remove(temporary_name)
     
@@ -61,7 +64,7 @@ class EncryptedUploader:
         return count
     
     def _create_drive(self):
-        """Create a Drive service."""
+        #"""Create a Drive service."""
         auth_required = True
         #Have we got some credentials already?
         storage = Storage(self.oauth_folder+'/uploader_credentials.txt')    
@@ -99,7 +102,7 @@ class EncryptedUploader:
         self.drive_service = discovery.build('drive', 'v2', http_auth)
             
     def get_folder_id(self, folder_name):
-        """Find and return the id of the folder given the title."""
+        #"""Find and return the id of the folder given the title."""
         files = self.drive_service.files().list(q="title='%s' and mimeType contains 'application/vnd.google-apps.folder' and trashed=false" % folder_name).execute()
         if len(files['items']) == 1:
             folder_id = files['items'][0]['id']
@@ -117,14 +120,18 @@ class EncryptedUploader:
         return file.get('id')
 
     def upload_file(self, file_path,parent):
-        #folder_id = self._get_folder_id(parent)
-        
         media = MediaFileUpload(file_path, mimetype='video/avi')
-        response = self.drive_service.files().insert(media_body=media, body={'title':os.path.basename(file_path), 'parents':[{u'id': parent}]}).execute()
+        count = 0
+        while(count < 3):
+            try:
+                response = self.drive_service.files().insert(media_body=media, body={'title':os.path.basename(file_path), 'parents':[{u'id': parent}]}).execute()
+                return True
+            except IOError as e:
+                sleep(3)
+                count+=1
+        return "failure to upload: "+file_path
         #print response
         video_link = response['alternateLink']
-        #if self.delete_after_upload:
-            #os.remove(file_path)    
 
 if __name__ == "__main__":
     if len(sys.argv)!=4:

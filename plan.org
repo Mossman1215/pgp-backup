@@ -55,4 +55,5 @@
     address
     password
 ** DONE figure out the file to integrate the components into
-** TODO logging and waiting
+** DONE logging and waiting
+** TODO upload sample options.conf and sample systemd file and a bash script
