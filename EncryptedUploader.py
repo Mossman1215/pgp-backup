@@ -36,7 +36,7 @@ class EncryptedUploader:
             title = os.path.basename(root)
             pID = self.getParentID(title)
             if(pID == -1):
-                pID = self.get_folder_id(self.remote)#add error code if folder does not exist make it! or crash with helpfull message
+                pID = self.get_folder_id(self.remote)#add error code if folder does not exist. Either make it! or crash with helpfull message
                 self.mapping[title] = pID
             identifier = self.make_folder(title,pID)
             for subdir in subdirs:
@@ -47,12 +47,9 @@ class EncryptedUploader:
                 print(file_path)
                 #encrypt
                 temporary_name = self.encrypter.encrypt(file_path)
-                try:
-                    result = self.upload_file(temporary_name,identifier)
-                    if(type(result) is StringType): #will print error if upload fails
-                        print(result)
-                except TypeError as arg:
-                    print("file type error (none): " + str(arg))
+                result = self.upload_file(temporary_name,identifier)
+                if(type(result) is StringType): #will print error if upload fails
+                    print(result)
                 time.sleep(1)
                 os.remove(temporary_name)
     
@@ -129,6 +126,8 @@ class EncryptedUploader:
             except IOError as e:
                 sleep(3)
                 count+=1
+            except TypeError as te:
+                return ("file type error: " + str(arg))
         return "failure to upload: "+file_path
         #print response
         video_link = response['alternateLink']
