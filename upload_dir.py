@@ -109,13 +109,15 @@ class encryptedUploader:
 
     def upload_file(self, file_path,parent):
         #folder_id = self._get_folder_id(parent)
-        
-        media = MediaFileUpload(file_path, mimetype='video/avi')
-        response = self.drive_service.files().insert(media_body=media, body={'title':os.path.basename(file_path), 'parents':[{u'id': parent}]}).execute()
-        #print response
-        video_link = response['alternateLink']
-        #if self.delete_after_upload:
-            #os.remove(file_path)    
+        try:
+            media = MediaFileUpload(file_path, mimetype='video/avi')
+            response = self.drive_service.files().insert(media_body=media, body={'title':os.path.basename(file_path), 'parents':[{u'id': parent}]}).execute()
+            #print response
+            video_link = response['alternateLink']
+            #if self.delete_after_upload:
+            #os.remove(file_path)
+        except TypeError as e:
+            print("type error "+str(e))
 
 if __name__ == "__main__":
     if len(sys.argv)<4:
