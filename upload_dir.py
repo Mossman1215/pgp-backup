@@ -30,12 +30,12 @@ class encryptedUploader:
         print(self.number_of_operations())
         for root,subdirs,files in os.walk(self.source, topdown=True):
             #store the root id
-            title = os.path.basename(root)
-            pID = self.getParentID(title)
+            name = os.path.basename(root)
+            pID = self.getParentID(name)
             if(pID == -1):
                 pID = self.get_folder_id(self.remote)#add error code if folder does not exist make it! or crash with helpfull message
-                self.mapping[title] = pID
-            identifier = self.make_folder(title,pID)
+                self.mapping[name] = pID
+            identifier = self.make_folder(name,pID)
             for subdir in subdirs:
                 subName = os.path.basename(subdir)
                 self.mapping[subName] = identifier
@@ -87,33 +87,35 @@ class encryptedUploader:
 
         #Get the drive service
         http_auth = credentials.authorize(httplib2.Http())
-        self.drive_service = discovery.build('drive', 'v2', http_auth)
+        self.drive_service = discovery.build('drive', 'v3', http_auth)
             
     def get_folder_id(self, folder_name):
-        """Find and return the id of the folder given the title."""
-        files = self.drive_service.files().list(q="title='%s' and mimeType contains 'application/vnd.google-apps.folder' and trashed=false" % folder_name).execute()
-        if len(files['items']) == 1:
-            folder_id = files['items'][0]['id']
+        """Find and return the id of the folder given the name."""
+        resp = self.drive_service.files().list(fields='nextPageToken,files(id)',
+                                               q="name='{0}' and mimeType contains 'application/vnd.google-apps.folder' and trashed=false".format(folder_name)).execute()
+        files = resp.get('files',[])
+        if len(files) == 1:
+            folder_id = files[0]['id']
             return folder_id
         else:
             return "folder not found"
 
-    def make_folder(self,title,parent_id):
+    def make_folder(self,name,parent_id):
         file_metadata = {
-            'title' : title,
+            'name' : name,
             'parents' : [{'id':parent_id}],
             'mimeType' : 'application/vnd.google-apps.folder'
         }
-        file = self.drive_service.files().insert(body=file_metadata,fields='id').execute()
+        file = self.drive_service.files().create(body=file_metadata,fields='id').execute()
         return file.get('id')
 
     def upload_file(self, file_path,parent):
         #folder_id = self._get_folder_id(parent)
         try:
-            media = MediaFileUpload(file_path, mimetype='video/avi')
-            response = self.drive_service.files().insert(media_body=media, body={'title':os.path.basename(file_path), 'parents':[{u'id': parent}]}).execute()
+            media = MediaFileUpload(file_path, mimetype='text/plain')
+            response = self.drive_service.files().create(media_body=media, body={'name':os.path.basename(file_path), 'parents':[{u'id': parent}]}).execute()
             #print response
-            video_link = response['alternateLink']
+            #video_link = response['alternateLink']
             #if self.delete_after_upload:
             #os.remove(file_path)
         except TypeError as e:

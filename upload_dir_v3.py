@@ -47,10 +47,27 @@ def main():
         print('Files:')
         for item in items:
             print('{0} ({1})'.format(item['name'],item['id']))
-    file_path = '/home/moss/Documents/Fundamentals_of_Database_Systems,_6th_Edition.pdf'
+    print('find all folders query')
+    result_set = service.files().list(pageSize=10,fields="nextPageToken, files(id,name)",q="name={0} and mimeType contains 'application/vnd.google-apps.folder' and trashed=false").execute()
+    print('the keys of the result set')
+    print(result_set.keys())
+    print('uploading a file')
+    file_path = '/home/moss/Documents/derp.org'
     media = MediaFileUpload(file_path, mimetype='text/plain')
     body= {'name':os.path.basename(file_path)}
     response = service.files().create(body=body,media_body=media).execute()
     print('upload complete')
+    print('resulting response:')
+    print(str(response))
+    print('creating a folder')
+    file_metadata = {
+        'name' : 'test',
+        'mimeType' : 'application/vnd.google-apps.folder'
+    }
+    response = service.files().create(body=file_metadata).execute()
+    print("request executed")
+    print('response')
+    print(str(response))
+
 if __name__=='__main__':
     main()

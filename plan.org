@@ -57,3 +57,13 @@
 ** DONE figure out the file to integrate the components into
 ** DONE logging and waiting
 ** TODO upload sample options.conf and sample systemd file and a bash script
+** TODO convert to api v3
+*** DONE change insert to create
+*** DONE change title to name
+*** TODO download new secret files for credentials (service account or Ps4??)
+*** DONE change find file to v3 api
+*** TODO test it?
+* resources
+** Drive API Docs
+   https://developers.google.com/resources/api-libraries/documentation/drive/v3/python/latest/
+
